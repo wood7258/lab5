@@ -3,28 +3,48 @@
 */
 
 $(function() {
-    sortObjArray(Employees, 'last');
-    render(Employees);
+	var eEntries = Employees.entries;
+    sortObjArray(eEntries, 'last');
+    render(eEntries);
+	$('.sort-ui .btn').click(function() {
+		var sortBtn = $(this);
+		sortObjArray(eEntries, sortBtn.attr('data-sortby'));
+		sortBtn.siblings('.active').removeClass('active');
+		sortBtn.addClass('active');
+		render(eEntries);
+	});
+    $('.sort-ui .btn').popover({
+        content: function() {
+			return 'Click to Resort by ' + $(this).html();
+		},
+        container: 'body',
+        trigger: 'hover',
+        placement: 'bottom'
+    });
 });
 
 function render(entries) {
     var template = $('.template');
     var abook = $('.address-book');
+	abook.hide();
     abook.empty();
     $.each(entries, function() {
         var abookline = template.clone();
-        for (prop in entry) {
+        for (prop in this) {
             if (prop === 'pic') {
-                abookline.find('.pic').src(entry.prop)
-                abookline.find('.pic').alt('Picture of ' + entry.first + ' ' + entry.last);
+                abookline.find('.pic').attr({
+					src: this[prop],
+					alt: 'Picture of ' + this['first'] + ' ' + this['last']
+				});
             }
             else {
-                abookline.find('.' + prop).html(entry.prop);
+                abookline.find('.' + prop).html(this[prop]);
             }
         }
-        abookline.removeClass('.template');
+        abookline.removeClass('template');
         abook.append(abookline);
     });
+	abook.fadeIn(1000);
 }
 
 /* sortObjArray()
