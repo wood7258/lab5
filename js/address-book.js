@@ -2,6 +2,30 @@
     this is where you will add your JavaScript to complete Lab 5
 */
 
+$(function() {
+    sortObjArray(Employees, 'last');
+    render(Employees);
+});
+
+function render(entries) {
+    var template = $('.template');
+    var abook = $('.address-book');
+    abook.empty();
+    $.each(entries, function() {
+        var abookline = template.clone();
+        for (prop in entry) {
+            if (prop === 'pic') {
+                abookline.find('.pic').src(entry.prop)
+                abookline.find('.pic').alt('Picture of ' + entry.first + ' ' + entry.last);
+            }
+            else {
+                abookline.find('.' + prop).html(entry.prop);
+            }
+        }
+        abookline.removeClass('.template');
+        abook.append(abookline);
+    });
+}
 
 /* sortObjArray()
     sorts an array of objects by a given property name
